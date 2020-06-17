@@ -1,3 +1,5 @@
+// Package list contains some functions to help with
+// the built-in "container/list" package.
 package list
 
 import (
@@ -28,9 +30,8 @@ func (l List) Map(f func(interface{}) interface{}) List {
 func (l List) Filter(f func(interface{}) bool) List {
 	for e := l.Front(); e != nil; e = e.Next() {
 		if f(e.Value) {
-			o := e.Prev()
-			l.Remove(e)
-			e = o
+			e = e.Prev()
+			l.Remove(e.Next())
 		}
 	}
 	return l
