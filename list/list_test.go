@@ -14,8 +14,33 @@ func init() {
 }
 
 func load() {
+	l = New()
 	for _, v := range vals {
 		l.PushBack(v)
+	}
+}
+
+func TestGroupBy(t *testing.T) {
+	m := l.GroupBy(func(i interface{}) interface{} { return i.(int) > 7 })
+
+	if len(m) != 2 {
+		t.Error("map returned wrong keys\n")
+	}
+	if m[true].Len() != 2 {
+		t.Error("true contains different number of elements")
+	}
+	if m[false].Len() != 3 {
+		t.Error("false contains different number of elements")
+	}
+
+	for k, v := range m {
+		t.Logf("key %v value %+v\n", k, v.List)
+		for e := v.Front(); e != nil; e = e.Next() {
+			t.Log(e.Value)
+			if e.Value == nil {
+				t.Error("nil element")
+			}
+		}
 	}
 }
 

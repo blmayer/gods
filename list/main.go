@@ -1,5 +1,8 @@
-// Package list contains some functions to help with
-// the built-in "container/list" package.
+// Package list contains some functions to help with the built-in
+// "container/list" package. This makes it easier to manipulate lists
+// of any type, as all functions from the "container/list" package are
+// available. one nice addition is the PushSorted function that inserts
+// a new element in order, given a sort function.
 package list
 
 import (
@@ -54,4 +57,18 @@ func (l List) PushSort(e interface{}) {
 		panic("Less function is not defined")
 	}
 	l.PushSorted(e, l.Less)
+}
+
+// Group by returns the data grouped by some function
+func (l List) GroupBy(by func(interface{}) interface{}) (m map[interface{}]List) {
+	m = make(map[interface{}]List)
+	for x := l.Front(); x != nil; x = x.Next() {
+		key := by(x.Value)
+		println(key)
+		if _, ok := m[key]; !ok {
+			m[key] = New()
+		}
+		m[key].PushFront(x.Value)
+	}
+	return m
 }
